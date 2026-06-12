@@ -90,9 +90,9 @@ abstract class PillPalDatabase : RoomDatabase() {
                             // Insert default schedules
                             dao.insertSchedules(
                                 listOf(
-                                    ScheduleItem("morning", "Morning Wheel", "08:00 AM"),
-                                    ScheduleItem("midday", "Midday Wheel", "01:30 PM"),
-                                    ScheduleItem("night", "Night Wheel", "08:00 PM")
+                                    ScheduleItem("morning", "Roue du Matin", "08:00 AM"),
+                                    ScheduleItem("midday", "Roue du Midi", "01:30 PM"),
+                                    ScheduleItem("night", "Roue du Soir", "08:00 PM")
                                 )
                             )
                             // Insert default rich history log messages matching the reference design layout!
@@ -100,37 +100,37 @@ abstract class PillPalDatabase : RoomDatabase() {
                                 listOf(
                                     HistoryLog(
                                         type = "low_battery",
-                                        title = "Low Battery Alert",
-                                        description = "Device battery at 15%.",
-                                        time = "02:30 PM",
-                                        dateLabel = "Today",
-                                        category = "Hardware Status",
+                                        title = "Alerte Batterie Faible",
+                                        description = "Batterie de l'appareil à 15%.",
+                                        time = "14:30",
+                                        dateLabel = "Aujourd'hui",
+                                        category = "Statut Matériel",
                                         timestamp = System.currentTimeMillis() - 2 * 60 * 60 * 1000 // 2 hours ago
                                     ),
                                     HistoryLog(
                                         type = "dose_missed",
-                                        title = "Missed Midday Dose",
-                                        description = "Medication remained in tray.",
-                                        time = "12:15 PM",
-                                        dateLabel = "Today",
+                                        title = "Dose du Midi Manquée",
+                                        description = "Le médicament est resté dans le plateau.",
+                                        time = "12:15",
+                                        dateLabel = "Aujourd'hui",
                                         category = "Doses",
                                         timestamp = System.currentTimeMillis() - 4 * 60 * 60 * 1000 // 4 hours ago
                                     ),
                                     HistoryLog(
                                         type = "dose_dispensed",
-                                        title = "Morning Dose Dispensed",
-                                        description = "Carousel A rotated successfully.",
-                                        time = "08:05 AM",
-                                        dateLabel = "Today",
+                                        title = "Dose du Matin Distribuée",
+                                        description = "Le carrousel A a tourné avec succès.",
+                                        time = "08:05",
+                                        dateLabel = "Aujourd'hui",
                                         category = "Doses",
                                         timestamp = System.currentTimeMillis() - 8 * 60 * 60 * 1000 // 8 hours ago
                                     ),
                                     HistoryLog(
                                         type = "dose_dispensed",
-                                        title = "Evening Dose Dispensed",
-                                        description = "Carousel B rotated successfully.",
-                                        time = "08:00 PM",
-                                        dateLabel = "Yesterday",
+                                        title = "Dose du Soir Distribuée",
+                                        description = "Le carrousel B a tourné avec succès.",
+                                        time = "20:00",
+                                        dateLabel = "Hier",
                                         category = "Doses",
                                         timestamp = System.currentTimeMillis() - 20 * 60 * 60 * 1000 // Yesterday
                                     )

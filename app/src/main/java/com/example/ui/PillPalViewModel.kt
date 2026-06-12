@@ -59,7 +59,7 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
     private val _signInPassword = MutableStateFlow("••••••••••")
     val signInPassword: StateFlow<String> = _signInPassword.asStateFlow()
 
-    private val _profileName = MutableStateFlow("Ahmed's Caregiver")
+    private val _profileName = MutableStateFlow("Aidant d'Ahmed")
     val profileName: StateFlow<String> = _profileName.asStateFlow()
 
     private val _profileEmail = MutableStateFlow("caregiver@pillpal.com")
@@ -115,14 +115,14 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
     val isSyncing: StateFlow<Boolean> = _isSyncing.asStateFlow()
 
     // Filter chip configuration on History page
-    private val _historyFilter = MutableStateFlow("All") // "All", "Doses", "Hardware Status"
+    private val _historyFilter = MutableStateFlow("Tout") // "Tout", "Doses", "Statut Matériel"
     val historyFilter: StateFlow<String> = _historyFilter.asStateFlow()
 
     // Device diagnostic states
     private val _isDeviceOnline = MutableStateFlow(true)
     val isDeviceOnline: StateFlow<Boolean> = _isDeviceOnline.asStateFlow()
 
-    private val _devicePowerStatus = MutableStateFlow("USB-C Plugged In")
+    private val _devicePowerStatus = MutableStateFlow("USB-C branché")
     val devicePowerStatus: StateFlow<String> = _devicePowerStatus.asStateFlow()
 
     private val _deviceBatteryLevel = MutableStateFlow(88)
@@ -150,8 +150,8 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
     private val _pillsRemaining = MutableStateFlow(21) // out of 21 max
     val pillsRemaining: StateFlow<Int> = _pillsRemaining.asStateFlow()
 
-    // Selected tab inside Schedule page ("Drop Timers" vs "Refill Blueprint")
-    private val _scheduleTab = MutableStateFlow("Drop Timers")
+    // Selected tab inside Schedule page ("Heures de Distribution" vs "Plan de Recharge")
+    private val _scheduleTab = MutableStateFlow("Heures de Distribution")
     val scheduleTab: StateFlow<String> = _scheduleTab.asStateFlow()
 
     // Form screen helper updates
@@ -185,8 +185,8 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
                     // Add missed event if not actioned
                     recordEvent(
                         type = "dose_missed",
-                        title = "Missed Midday Dose",
-                        description = "Patient did not take medication within the designated drop window.",
+                        title = "Dose du Midi Manquée",
+                        description = "Le patient n'a pas pris ses médicaments dans la plage horaire prévue.",
                         category = "Doses"
                     )
                 }
@@ -248,9 +248,9 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             _wifiSending.value = false
             recordEvent(
                 type = "calibrated",
-                title = "Wifi Connection Succeeded",
-                description = "Linked dispenser successfully to SSI: ${_selectedSSID.value}",
-                category = "Hardware Status"
+                title = "Connexion Wifi Réussie",
+                description = "Distributeur connecté avec succès au SSID : ${_selectedSSID.value}",
+                category = "Statut Matériel"
             )
             navigateTo(Screen.PAIRED_SUCCESS)
         }
@@ -267,9 +267,9 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             _deviceBatteryLevel.value = (80..98).random()
             recordEvent(
                 type = "dose_dispensed",
-                title = "Device Health Sync",
-                description = "Database and timing schedule synced with physical dispenser in real-time.",
-                category = "Hardware Status"
+                title = "Synchronisation Santé Appareil",
+                description = "Base de données et horaires de distribution synchronisés en temps réel avec le distributeur.",
+                category = "Statut Matériel"
             )
         }
     }
@@ -284,9 +284,9 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             // Add history event
             recordEvent(
                 type = "calibrated",
-                title = "Schedule Synchronized",
-                description = "Dispenser internal dropping wheel timers updated: M=$morningTime, D=$middayTime, N=$nightTime.",
-                category = "Hardware Status"
+                title = "Horaires Synchronisés",
+                description = "Minuteurs de l'appareil mis à jour : Matin=$morningTime, Midi=$middayTime, Soir=$nightTime.",
+                category = "Statut Matériel"
             )
         }
     }
@@ -308,11 +308,11 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             repository.insertLog(
                 HistoryLog(
                     type = "calibrated",
-                    title = "History Cleared",
-                    description = "Event activity history was archived by Caregiver.",
+                    title = "Historique Effacé",
+                    description = "L'historique des événements a été archivé par l'aidant.",
                     time = currentTimeString(),
-                    dateLabel = "Today",
-                    category = "Hardware Status"
+                    dateLabel = "Aujourd'hui",
+                    category = "Statut Matériel"
                 )
             )
         }
@@ -345,15 +345,15 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             val title = when (batch.lowercase()) {
                 "morning" -> {
                     _morningDoseDispensed.value = true
-                    "Morning Dose"
+                    "Dose du Matin"
                 }
                 "midday" -> {
                     _middayDoseDispensed.value = true
-                    "Midday Dose"
+                    "Dose du Midi"
                 }
                 else -> {
                     _nightDoseDispensed.value = true
-                    "Night Dose"
+                    "Dose du Soir"
                 }
             }
 
@@ -365,8 +365,8 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             // Create log event
             recordEvent(
                 type = "manual_drop",
-                title = "$title Forced Drop",
-                description = "Caregiver initiated remote drop override. Dispenser chamber rotated successfully.",
+                title = "Distribution forcée : $title",
+                description = "L'aidant a forcé la distribution à distance. Le carrousel du distributeur a tourné avec succès.",
                 category = "Doses"
             )
         }
@@ -377,9 +377,9 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             recordEvent(
                 type = "calibrated",
-                title = "Hardware Self-Calibration",
-                description = "Dispensing carousel physical alignment, home sensor, and speed index calibrated successfully.",
-                category = "Hardware Status"
+                title = "Auto-calibration Matérielle",
+                description = "Alignement physique du carrousel, capteur d'origine et index de vitesse calibrés avec succès.",
+                category = "Statut Matériel"
             )
         }
     }
@@ -390,9 +390,9 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             _deviceBatteryLevel.value = 88
             recordEvent(
                 type = "restart",
-                title = "Smart Device Rebooted",
-                description = "PillPal physical micro-controller system rebooted and reacquired cloud server.",
-                category = "Hardware Status"
+                title = "Appareil Intelligent Redémarré",
+                description = "Le système de micro-contrôleur physique PillPal a redémarré et s'est reconnecté au serveur cloud.",
+                category = "Statut Matériel"
             )
         }
     }
@@ -402,8 +402,8 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             recordEvent(
                 type = "calibrated",
-                title = "Carousel Refill Completed",
-                description = "Caregiver refilled the 21-slot rotary cartridge (7 slots per wheel) with scheduled medications.",
+                title = "Recharge du Carrousel Terminée",
+                description = "L'aidant a rechargé la cartouche rotative de 21 compartiments (7 par roue) avec les médicaments programmés.",
                 category = "Doses"
             )
         }
@@ -415,9 +415,9 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             recordEvent(
                 type = "system",
-                title = "Caregiver Logged Out",
-                description = "Caregiver manually logged out from the hardware controls center.",
-                category = "System"
+                title = "Aidant Déconnecté",
+                description = "L'aidant s'est déconnecté manuellement du centre de contrôle de l'appareil.",
+                category = "Système"
             )
         }
     }
@@ -430,7 +430,7 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
                 title = title,
                 description = description,
                 time = currentTimeString(),
-                dateLabel = "Today",
+                dateLabel = "Aujourd'hui",
                 category = category
             )
         )

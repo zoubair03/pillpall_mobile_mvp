@@ -309,7 +309,7 @@ fun PillPalTopStatusBar(
                         modifier = Modifier.size(18.dp)
                     )
                     Text(
-                        text = if (isOnline) "WiFi" else "Offline",
+                        text = if (isOnline) "WiFi" else "Hors-ligne",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (isOnline) PillPalPrimary else PillPalAlertText
@@ -361,7 +361,7 @@ fun PillPalTopStatusBar(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
-                        contentDescription = "Sync device databases",
+                        contentDescription = "Synchroniser l'appareil",
                         tint = PillPalPrimary,
                         modifier = Modifier
                             .size(20.dp)
@@ -396,10 +396,10 @@ fun PillPalBottomNavBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val tabs = listOf(
-                Triple(PillPalViewModel.Tab.HOME, Icons.Default.Home, "Home"),
-                Triple(PillPalViewModel.Tab.SCHEDULE, Icons.Default.DateRange, "Schedule"),
-                Triple(PillPalViewModel.Tab.HISTORY, Icons.Default.List, "History"),
-                Triple(PillPalViewModel.Tab.CONTROLS, Icons.Default.Settings, "Controls")
+                Triple(PillPalViewModel.Tab.HOME, Icons.Default.Home, "Accueil"),
+                Triple(PillPalViewModel.Tab.SCHEDULE, Icons.Default.DateRange, "Horaires"),
+                Triple(PillPalViewModel.Tab.HISTORY, Icons.Default.List, "Historique"),
+                Triple(PillPalViewModel.Tab.CONTROLS, Icons.Default.Settings, "Contrôles")
             )
 
             tabs.forEach { (tab, icon, label) ->
@@ -504,7 +504,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(18.dp))
 
                 Text(
-                    text = "Welcome to PillPal",
+                    text = "Bienvenue sur PillPal",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = PillPalTextPrimary,
@@ -512,7 +512,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Sign in to manage schedules & monitor the IoT physical dispenser.",
+                    text = "Connectez-vous pour gérer les horaires et surveiller le distributeur IoT physique.",
                     fontSize = 14.sp,
                     color = PillPalTextSecondary,
                     textAlign = TextAlign.Center,
@@ -524,7 +524,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 // Email Input field with Lead Icon (single line static size)
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "EMAIL ADDRESS",
+                        text = "ADRESSE EMAIL",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = PillPalTextPrimary,
@@ -547,7 +547,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .testTag("signin_email_field"),
-                        placeholder = { Text("caregiver@pillpal.com") },
+                        placeholder = { Text("aidant@pillpal.com") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         singleLine = true,
                         maxLines = 1,
@@ -564,7 +564,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 // Password Input field with Lead Icon (single line static size)
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "PASSWORD",
+                        text = "MOT DE PASSE",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = PillPalTextPrimary,
@@ -615,7 +615,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 Button(
                     onClick = {
                         if (email.isBlank() || password.isBlank()) {
-                            loginError = "Please enter both Email and Password"
+                            loginError = "Veuillez entrer l'adresse email et le mot de passe"
                         } else {
                             viewModel.navigateTo(PillPalViewModel.Screen.MAIN_HUB)
                         }
@@ -632,7 +632,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Text("Log In Now", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Se Connecter", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Arrow right signin", modifier = Modifier.size(18.dp))
                     }
                 }
@@ -647,7 +647,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 ) {
                     Divider(modifier = Modifier.weight(1f), color = PillPalDivider.copy(alpha = 0.5f))
                     Text(
-                        text = "  OR  ",
+                        text = "  OU  ",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = PillPalTextSecondary,
@@ -680,7 +680,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                             modifier = Modifier.size(18.dp)
                         )
                         Text(
-                            text = "Register / Create Profile",
+                            text = "S'enregistrer / Créer un Profil",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = PillPalPrimary
@@ -739,14 +739,14 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 modifier = Modifier.padding(26.dp)
             ) {
                 Text(
-                    text = "Caregiver Registration",
+                    text = "Inscription de l'aidant",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = PillPalTextPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Fill in your profile details below to initiate wireless linking with your PillPal hardware.",
+                    text = "Remplissez vos détails de profil ci-dessous pour lancer la liaison sans fil avec votre appareil PillPal.",
                     fontSize = 13.sp,
                     color = PillPalTextSecondary,
                     lineHeight = 18.sp
@@ -756,12 +756,12 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
 
                 // Full name
                 Column {
-                    Text("FULL NAME", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+                    Text("NOM COMPLET", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
-                        placeholder = { Text("e.g. Jane Doe") },
+                        placeholder = { Text("ex. Jeanne Dupont") },
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = PillPalPrimary, modifier = Modifier.size(20.dp)) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -785,12 +785,12 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 ) {
                     // Age
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("AGE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+                        Text("ÂGE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                         Spacer(modifier = Modifier.height(6.dp))
                         OutlinedTextField(
                             value = age,
                             onValueChange = { age = it },
-                            placeholder = { Text("e.g. 45") },
+                            placeholder = { Text("ex. 45") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
                             maxLines = 1,
@@ -805,7 +805,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
 
                     // DOB (Interactive Date Selector)
                     Column(modifier = Modifier.weight(1.5f)) {
-                        Text("DATE OF BIRTH", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+                        Text("DATE DE NAISSANCE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                         Spacer(modifier = Modifier.height(6.dp))
                         Box(
                             modifier = Modifier
@@ -813,13 +813,13 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                 .clickable { showDatePicker = true }
                         ) {
                             OutlinedTextField(
-                                value = dob.ifBlank { "Select Date" },
+                                value = dob.ifBlank { "Choisir une date" },
                                 onValueChange = {},
                                 readOnly = true,
                                 enabled = false,
-                                placeholder = { Text("YYYY-MM-DD") },
+                                placeholder = { Text("AAAA-MM-JJ") },
                                 trailingIcon = {
-                                    Icon(
+                                     Icon(
                                         imageVector = Icons.Default.DateRange,
                                         contentDescription = "Show Date Picker calendar dialog icon trigger",
                                         tint = PillPalPrimary,
@@ -843,12 +843,12 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
 
                 // Email Address
                 Column {
-                    Text("EMAIL ADDRESS", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+                     Text("ADRESSE EMAIL", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = { Text("name@example.com") },
+                        placeholder = { Text("nom@exemple.com") },
                         leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = PillPalPrimary, modifier = Modifier.size(20.dp)) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -868,12 +868,12 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
 
                 // Password
                 Column {
-                    Text("PASSWORD", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+                    Text("MOT DE PASSE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        placeholder = { Text("Create password") },
+                        placeholder = { Text("Créer un mot de passe") },
                         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = PillPalPrimary, modifier = Modifier.size(20.dp)) },
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier
@@ -905,7 +905,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                         colors = CheckboxDefaults.colors(checkedColor = PillPalPrimary)
                     )
                     Text(
-                        text = "I approve sharing telehealth records with PillPal Dispenser.",
+                        text = "J'autorise le partage de mes données avec le distributeur PillPal.",
                         fontSize = 13.sp,
                         color = PillPalTextSecondary
                     )
@@ -927,9 +927,9 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 Button(
                     onClick = {
                         if (name.isBlank() || email.isBlank() || password.isBlank() || age.isBlank() || dob.isBlank()) {
-                            validationError = "Please fill in all requested fields"
+                            validationError = "Veuillez remplir tous les champs demandés"
                         } else if (!agree) {
-                            validationError = "You must approve the telehealth sync authorization"
+                            validationError = "Vous devez approuver le partage de vos données"
                         } else {
                             viewModel.navigateTo(PillPalViewModel.Screen.NO_DEVICE)
                         }
@@ -946,7 +946,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Register & Begin IoT Setup", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("S'inscrire & Démarrer la Configuration", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Proceed link setup", modifier = Modifier.size(18.dp))
                     }
                 }
@@ -963,7 +963,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 onDismissRequest = { showDatePicker = false },
                 title = {
                     Text(
-                        text = "Select Date of Birth",
+                        text = "Sélectionner la Date de Naissance",
                         fontWeight = FontWeight.Bold,
                         color = PillPalTextPrimary,
                         fontSize = 18.sp
@@ -975,7 +975,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Text(
-                            text = "Please choose your date of birth. This will be linked to your PillPal caregiver credentials.",
+                            text = "Veuillez choisir votre date de naissance. Elle sera liée à vos identifiants d'aidant PillPal.",
                             fontSize = 12.sp,
                             color = PillPalTextSecondary,
                             lineHeight = 16.sp
@@ -997,10 +997,10 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 6.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
-                                        Text("MONTH", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
+                                        Text("MOIS", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Text(
-                                            text = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[selectedMonth - 1],
+                                            text = listOf("Janv", "Févr", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc")[selectedMonth - 1],
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 13.sp,
                                             color = PillPalTextPrimary
@@ -1012,7 +1012,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                     onDismissRequest = { monthExpanded = false },
                                     modifier = Modifier.background(PillPalSurface)
                                 ) {
-                                    listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec").forEachIndexed { index, name ->
+                                    listOf("Janv", "Févr", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc").forEachIndexed { index, name ->
                                         DropdownMenuItem(
                                             text = { Text(name, fontWeight = FontWeight.Bold, color = PillPalTextPrimary) },
                                             onClick = {
@@ -1044,7 +1044,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
-                                        Text("DAY", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
+                                        Text("JOUR", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Text(
                                             text = selectedDay.toString(),
@@ -1088,7 +1088,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
-                                        Text("YEAR", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
+                                        Text("ANNÉE", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Text(
                                             text = selectedYear.toString(),
@@ -1132,12 +1132,12 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                             showDatePicker = false
                         }
                     ) {
-                        Text("Confirm", fontWeight = FontWeight.Bold, color = PillPalPrimaryDark)
+                        Text("Confirmer", fontWeight = FontWeight.Bold, color = PillPalPrimaryDark)
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDatePicker = false }) {
-                        Text("Cancel", color = PillPalTextSecondary)
+                        Text("Annuler", color = PillPalTextSecondary)
                     }
                 }
             )
@@ -1197,7 +1197,7 @@ fun EnterCodeScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Enter Verification Code",
+                    text = "Saisir le Code de Validation",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary,
@@ -1207,7 +1207,7 @@ fun EnterCodeScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "We sent a secure 6-digit code to your email address.",
+                    text = "Nous avons envoyé un code de sécurité à 6 chiffres à votre adresse email.",
                     fontSize = 15.sp,
                     color = PillPalTextSecondary,
                     textAlign = TextAlign.Center,
@@ -1260,15 +1260,15 @@ fun EnterCodeScreen(viewModel: PillPalViewModel) {
                     colors = ButtonDefaults.buttonColors(containerColor = PillPalSecondary),
                     shape = RoundedCornerShape(27.dp)
                 ) {
-                    Text("Verify & Proceed", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text("Vérifier & Continuer", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Resend Ticker
                 Text(
-                    text = if (timer > 0) "Didn't receive code? Resend in 0:${String.format("%02d", timer)}"
-                           else "Didn't receive code? Resend Code Now",
+                    text = if (timer > 0) "Pas reçu le code ? Renvoyer dans 0:${String.format("%02d", timer)}"
+                           else "Pas reçu le code ? Renvoyer le code maintenant",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = if (timer > 0) PillPalTextSecondary else PillPalPrimary,
@@ -1317,7 +1317,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = "STEP 1 OF 2",
+                    text = "ÉTAPE 1 SUR 2",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = PillPalPrimaryDark,
@@ -1372,7 +1372,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(26.dp))
 
                 Text(
-                    text = "Find Your PillPal Device",
+                    text = "Trouver Votre Appareil PillPal",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary,
@@ -1382,7 +1382,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Turn on your PillPal physical dispenser so we can detect and register the IoT device via Bluetooth (BLE).",
+                    text = "Allumez votre distributeur physique PillPal pour que nous puissions détecter et enregistrer l'appareil via Bluetooth (BLE).",
                     fontSize = 14.sp,
                     color = PillPalTextSecondary,
                     textAlign = TextAlign.Center,
@@ -1406,7 +1406,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
-                            Text("Scan for Device (BLE)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            Text("Rechercher l'Appareil (BLE)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 } else if (isScanning) {
@@ -1416,7 +1416,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                     ) {
                         CircularProgressIndicator(color = PillPalPrimary, modifier = Modifier.size(36.dp), strokeWidth = 3.dp)
                         Text(
-                            text = "Scanning nearby frequency bands...", 
+                            text = "Recherche des fréquences à proximité...", 
                             fontSize = 13.sp, 
                             color = PillPalPrimaryDark, 
                             fontWeight = FontWeight.SemiBold
@@ -1424,7 +1424,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                     }
                 } else {
                     Text(
-                        text = "CHOOSE DETECTED HARDWARE:",
+                        text = "CHOISIR L'APPAREIL DÉTECTÉ :",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = PillPalTextSecondary,
@@ -1522,7 +1522,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = "STEP 2 OF 2",
+                    text = "ÉTAPE 2 SUR 2",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = PillPalPrimaryDark,
@@ -1561,13 +1561,13 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 }
                 Column {
                     Text(
-                        text = "Bluetooth Linked Successfully",
+                        text = "Bluetooth connecté avec succès",
                         color = PillPalTextPrimary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp
                     )
                     Text(
-                        text = "Hardware Device: PillPal-SN8824",
+                        text = "Appareil matériel : PillPal-SN8824",
                         color = PillPalTextSecondary,
                         fontSize = 11.sp
                     )
@@ -1590,14 +1590,14 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 modifier = Modifier.padding(26.dp)
             ) {
                 Text(
-                    text = "WiFi Configuration",
+                    text = "Configuration WiFi",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Select your home WiFi network so the physical dispenser can connect to the cloud.",
+                    text = "Sélectionnez votre réseau WiFi domestique pour que le distributeur physique puisse se connecter au cloud.",
                     fontSize = 13.sp,
                     color = PillPalTextSecondary,
                     lineHeight = 18.sp
@@ -1606,7 +1606,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(26.dp))
 
                 // Select WiFi Network Dropdown
-                Text("CHOOSE WIFI NETWORK (SSID)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+                Text("CHOISIR LE RÉSEAU WIFI (SSID)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                 Spacer(modifier = Modifier.height(6.dp))
                 BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
                     val boxWidth = maxWidth
@@ -1616,7 +1616,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                             .clickable { showDropdown = true }
                     ) {
                         OutlinedTextField(
-                            value = selectedSSID.ifBlank { "Choose a network..." },
+                            value = selectedSSID.ifBlank { "Choisir un réseau..." },
                             onValueChange = {},
                             readOnly = true,
                             enabled = false,
@@ -1685,12 +1685,12 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(18.dp))
 
                 // Wifi Password Input
-                Text("WIFI PASSWORD", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+                Text("MOT DE PASSE WIFI", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                 Spacer(modifier = Modifier.height(6.dp))
                 OutlinedTextField(
                     value = password,
                     onValueChange = { viewModel.updateWifiPassword(it) },
-                    placeholder = { Text("Enter network password") },
+                    placeholder = { Text("Entrer le mot de passe réseau") },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock, 
@@ -1737,7 +1737,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
-                        Text("Connect IoT Dispenser", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Connecter le distributeur IoT", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
                 }
 
@@ -1750,7 +1750,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                     ) {
                         CircularProgressIndicator(modifier = Modifier.size(22.dp), color = PillPalPrimary, strokeWidth = 3.dp)
                         Text(
-                            text = "Provisioning WiFi board credentials...",
+                            text = "Configuration des identifiants WiFi...",
                             color = PillPalPrimary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp
@@ -1822,7 +1822,7 @@ fun PairedSuccessScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(28.dp))
 
                 Text(
-                    text = "Paired Successfully!",
+                    text = "Appairé avec succès !",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = PillPalTextPrimary,
@@ -1832,7 +1832,7 @@ fun PairedSuccessScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Your physical PillPal dispenser has been fully registered, synced over your secure home WiFi, and successfully paired with your cloud profile.",
+                    text = "Votre distributeur physique PillPal a été entièrement enregistré, synchronisé sur votre WiFi domestique sécurisé et appairé avec succès à votre profil cloud.",
                     fontSize = 14.sp,
                     color = PillPalTextSecondary,
                     textAlign = TextAlign.Center,
@@ -1855,14 +1855,14 @@ fun PairedSuccessScreen(viewModel: PillPalViewModel) {
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("IoT Device Status:", fontSize = 12.sp, color = PillPalTextSecondary, fontWeight = FontWeight.Bold)
-                            Text("ONLINE / SECURED", fontSize = 12.sp, color = PillPalSuccess, fontWeight = FontWeight.ExtraBold)
+                            Text("Statut de l'appareil IoT :", fontSize = 12.sp, color = PillPalTextSecondary, fontWeight = FontWeight.Bold)
+                            Text("EN LIGNE / SÉCURISÉ", fontSize = 12.sp, color = PillPalSuccess, fontWeight = FontWeight.ExtraBold)
                         }
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Assigned ID:", fontSize = 12.sp, color = PillPalTextSecondary, fontWeight = FontWeight.Bold)
+                            Text("Identifiant assigné :", fontSize = 12.sp, color = PillPalTextSecondary, fontWeight = FontWeight.Bold)
                             Text("PillPal-SN8824", fontSize = 12.sp, color = PillPalTextPrimary, fontWeight = FontWeight.Bold)
                         }
                     }
@@ -1884,7 +1884,7 @@ fun PairedSuccessScreen(viewModel: PillPalViewModel) {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Access Dashboard", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Accéder au tableau de bord", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Icon(
                             imageVector = Icons.Default.ArrowForward,
                             contentDescription = "Navigate to dashboard",
@@ -1954,14 +1954,14 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
         item {
             Column(modifier = Modifier.padding(vertical = 4.dp)) {
                 Text(
-                    text = "Hello, Ahmed",
+                    text = "Bonjour, Ahmed",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary,
                     modifier = Modifier.testTag("home_user_greeting")
                 )
                 Text(
-                    text = "Wednesday, October 25",
+                    text = "Mercredi 25 octobre",
                     fontSize = 16.sp,
                     color = PillPalTextSecondary,
                     fontWeight = FontWeight.Medium
@@ -1984,11 +1984,11 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val days = listOf(
-                        Pair("M", 23),
-                        Pair("T", 24),
-                        Pair("W", 25),
-                        Pair("T", 26),
-                        Pair("F", 27)
+                        Pair("L", 23),
+                        Pair("M", 24),
+                        Pair("M", 25),
+                        Pair("J", 26),
+                        Pair("V", 27)
                     )
 
                     days.forEach { (dayName, dayNum) ->
@@ -2041,7 +2041,7 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Next Dose Approaching",
+                        text = "Prochaine Dose",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = PillPalPrimaryDark,
@@ -2051,7 +2051,7 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = "2 Pills • Dispenser Automated",
+                        text = "2 pilules • Distributeur automatique",
                         fontSize = 15.sp,
                         color = PillPalTextSecondary,
                         textAlign = TextAlign.Center,
@@ -2080,7 +2080,7 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
             ) {
                 // Morning Card
                 DoseItemCard(
-                    title = "Morning",
+                    title = "Matin",
                     timeLabel = "08:00 AM",
                     iconContent = {
                         val iconColor = if (isSystemInDarkTheme()) CustomPaletteMint else CustomPaletteEmerald
@@ -2092,7 +2092,7 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
 
                 // Midday Card
                 DoseItemCard(
-                    title = "Midday",
+                    title = "Midi",
                     timeLabel = "01:30 PM",
                     iconContent = {
                         val iconColor = if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C)
@@ -2104,7 +2104,7 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
 
                 // Night Card
                 DoseItemCard(
-                    title = "Night",
+                    title = "Soir",
                     timeLabel = "08:00 PM",
                     iconContent = {
                         val iconColor = if (isSystemInDarkTheme()) Color(0xFF90CAF9) else Color(0xFF1F7A6D)
@@ -2330,7 +2330,7 @@ fun DoseItemCard(
                             modifier = Modifier.size(18.dp) // Larger check icon
                         )
                         Text(
-                            text = "Dispensed",
+                            text = "Distribué",
                             fontSize = 14.sp, // Bigger status font size
                             color = if (isSystemInDarkTheme()) NaturalDarkGreen else Color.White,
                             fontWeight = FontWeight.ExtraBold,
@@ -2344,7 +2344,7 @@ fun DoseItemCard(
                                 .background(PillPalTextSecondary, CircleShape)
                         )
                         Text(
-                            text = "Pending",
+                            text = "En attente",
                             fontSize = 14.sp, // Bigger status font size
                             color = PillPalTextSecondary,
                             fontWeight = FontWeight.ExtraBold,
@@ -2377,7 +2377,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Schedule & Refill Hub",
+            text = "Horaires & Recharge",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             color = PillPalTextPrimary,
@@ -2404,7 +2404,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = tabName,
+                        text = if (tabName == "Drop Timers") "Rappels" else "Schéma de Recharge",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (selected) PillPalPrimary else PillPalTextSecondary
@@ -2469,8 +2469,13 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                                         }
                                     }
                                     Spacer(modifier = Modifier.width(16.dp))
+                                    val localLabel = when (schedule.id) {
+                                        "morning" -> "Matin"
+                                        "midday" -> "Midi"
+                                        else -> "Soir"
+                                    }
                                     Text(
-                                        text = schedule.label.replace(" Wheel", "").replace(" Batch", "").trim(),
+                                        text = localLabel,
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = PillPalTextPrimary
@@ -2499,7 +2504,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Text(
-                                            text = "Master Drop Time (Tap to Customize)",
+                                            text = "Heure de distribution (Appuyer pour modifier)",
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = PillPalTextSecondary
@@ -2533,7 +2538,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.White)
-                        Text("Save Sync To Dispenser", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Enregistrer & Synchro Distributeur", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -2562,14 +2567,14 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Dispenser Rotary Cartridges",
+                                text = "Cartouches rotatives du distributeur",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = PillPalTextPrimary
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = "A physical representation of the 3 integrated dosing wheels (7 slots each) inside PillPal.",
+                                text = "Représentation physique des 3 roues de dosage intégrées (7 fentes chacune) de PillPal.",
                                 fontSize = 13.sp,
                                 color = PillPalTextSecondary,
                                 textAlign = TextAlign.Center
@@ -2605,7 +2610,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                                         color = PillPalPrimaryDark
                                     )
                                     Text(
-                                        text = "out of 21 slots",
+                                        text = "sur 21 fentes",
                                         fontSize = 12.sp,
                                         color = PillPalTextSecondary,
                                         fontWeight = FontWeight.Bold
@@ -2663,8 +2668,8 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Capacity Remaining: ${((pillsRemaining / 21f) * 100).toInt()}%", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
-                                Text("Slots Empty: ${21 - pillsRemaining}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C))
+                                Text("Capacité restante : ${((pillsRemaining / 21f) * 100).toInt()}%", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
+                                Text("Fentes vides : ${21 - pillsRemaining}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C))
                             }
                         }
                     }
@@ -2687,7 +2692,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.White)
-                        Text("Refill & Reset Cartridge (21 slots)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Recharger & Réinitialiser (21 fentes)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -2711,12 +2716,12 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
             },
             dismissButton = {
                 TextButton(onClick = { showRefillConfirmationState = false }) {
-                    Text("Cancel", color = PillPalTextSecondary)
+                    Text("Annuler", color = PillPalTextSecondary)
                 }
             },
             title = {
                 Text(
-                    text = "Refill Dispenser Cartridges",
+                    text = "Recharger les cartouches du distributeur",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary
@@ -2724,7 +2729,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
             },
             text = {
                 Text(
-                    text = "Are you sure you want to refill the rotary cartridges? This will reset all 3 integrated wheels back to full capacity (21 total active pill slots remaining).",
+                    text = "Êtes-vous sûr de vouloir recharger les cartouches rotatives ? Cela réinitialisera les 3 roues intégrées à leur pleine capacité (21 fentes de pilules actives restantes).",
                     fontSize = 15.sp,
                     color = PillPalTextSecondary
                 )
@@ -2735,7 +2740,11 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
     // Custom elderly timing editor popup modal
     if (showTimeEditDialogForId != null) {
         val targetId = showTimeEditDialogForId!!
-        val label = schedulesList.find { it.id == targetId }?.label ?: "Dose Time Picker"
+        val label = when (targetId) {
+            "morning" -> "Matin"
+            "midday" -> "Midi"
+            else -> "Soir"
+        }
         var inputHour by remember { mutableStateOf(8) }
         var inputMinute by remember { mutableStateOf(0) }
         var inputPeriod by remember { mutableStateOf("AM") }
@@ -2755,17 +2764,17 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = PillPalPrimary)
                 ) {
-                    Text("Apply Time", fontWeight = FontWeight.Bold)
+                    Text("Appliquer", fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showTimeEditDialogForId = null }) {
-                    Text("Cancel", color = PillPalTextSecondary)
+                    Text("Annuler", color = PillPalTextSecondary)
                 }
             },
             title = {
                 Text(
-                    text = "Edit $label",
+                    text = "Modifier l'heure du $label",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary
@@ -2778,7 +2787,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Press the buttons below for easy modification:",
+                        "Appuyez sur les boutons ci-dessous pour modifier facilement :",
                         fontSize = 13.sp,
                         color = PillPalTextSecondary,
                         textAlign = TextAlign.Center
@@ -2792,7 +2801,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                     ) {
                         // HOUR BUTTONS
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Hour", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Text("Heure", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             IconButton(onClick = { if (inputHour < 12) inputHour++ else inputHour = 1 }) {
                                 Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "Hour up")
                             }
@@ -2828,12 +2837,12 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
 
                         // AM/PM SWITCHER
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Period", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Text("Période", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             Button(
                                 onClick = { inputPeriod = if (inputPeriod == "AM") "PM" else "AM" },
                                 colors = ButtonDefaults.buttonColors(containerColor = PillPalSecondary),
                                 shape = RoundedCornerShape(8.dp)
-                            ) {
+                              ) {
                                 Text(inputPeriod, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                             }
                         }
@@ -2923,22 +2932,26 @@ fun HistoryView(viewModel: PillPalViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Activity History",
+                text = "Historique",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 color = PillPalTextPrimary,
-                modifier = Modifier.testTag("activity_history_title")
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("activity_history_title")
             )
 
-            Text(
-                text = "Clear All",
-                color = PillPalAlert,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .clickable { viewModel.clearHistory() }
-                    .padding(8.dp)
-            )
+            Spacer(modifier = Modifier.width(8.dp))
+
+            IconButton(
+                onClick = { viewModel.clearHistory() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Effacer Tout",
+                    tint = PillPalAlert
+                )
+            }
         }
 
         // Horizontal Filters Chips Bar
@@ -2950,6 +2963,12 @@ fun HistoryView(viewModel: PillPalViewModel) {
             val filters = listOf("All", "Doses", "Hardware Status")
             filters.forEach { filterName ->
                 val active = filter == filterName
+                val filtersLabel = when (filterName) {
+                    "All" -> "Tout"
+                    "Doses" -> "Doses"
+                    "Hardware Status" -> "Statut Matériel"
+                    else -> filterName
+                }
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
@@ -2963,7 +2982,7 @@ fun HistoryView(viewModel: PillPalViewModel) {
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = filterName,
+                        text = filtersLabel,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (active) Color.White else PillPalTextSecondary
@@ -2983,7 +3002,7 @@ fun HistoryView(viewModel: PillPalViewModel) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(imageVector = Icons.Default.Info, contentDescription = null, tint = PillPalDisabled, modifier = Modifier.size(56.dp))
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text("No events found in archives.", fontSize = 16.sp, color = PillPalTextSecondary)
+                    Text("Aucun événement trouvé dans les archives.", fontSize = 16.sp, color = PillPalTextSecondary)
                 }
             }
         } else {
@@ -3125,14 +3144,14 @@ fun ControlsView(viewModel: PillPalViewModel) {
     ) {
         Column {
             Text(
-                text = "Hardware Override Center",
+                text = "Centre de Contrôle",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 color = PillPalTextPrimary,
                 modifier = Modifier.testTag("hardware_override_title")
             )
             Text(
-                text = "Remote control interface for your PillPal device.",
+                text = "Interface de contrôle à distance pour votre appareil PillPal.",
                 fontSize = 14.sp,
                 color = PillPalTextSecondary,
                 fontWeight = FontWeight.Medium
@@ -3168,7 +3187,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                         )
                     }
                     Text(
-                        text = "Live Diagnostics Telemetry",
+                        text = "Télémesure des Diagnostics en Direct",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = PillPalTextPrimary
@@ -3192,7 +3211,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                             modifier = Modifier.padding(12.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Text("WIRELESS LINK", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
+                            Text("LIAISON SANS FIL", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -3203,7 +3222,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                                         .background(if (online) PillPalSuccess else PillPalAlert, CircleShape)
                                 )
                                 Text(
-                                    text = if (online) "Online" else "Offline",
+                                    text = if (online) "En ligne" else "Hors ligne",
                                     fontWeight = FontWeight.Bold,
                                     color = if (online) PillPalSuccess else PillPalAlert,
                                     fontSize = 14.sp
@@ -3223,9 +3242,10 @@ fun ControlsView(viewModel: PillPalViewModel) {
                             modifier = Modifier.padding(12.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Text("POWER SOURCE", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
+                            Text("SOURCE D'ALIMENTATION", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
+                            val localPowerSource = if (powerSource == "MAIN LINE POWER") "SECTEUR" else if (powerSource == "BACKUP BATTERY ACTIVE") "BATTERIE SECOURS" else powerSource
                             Text(
-                                text = powerSource,
+                                text = localPowerSource,
                                 fontWeight = FontWeight.Bold,
                                 color = PillPalTextPrimary,
                                 fontSize = 14.sp
@@ -3243,7 +3263,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(imageVector = Icons.Default.Warning, contentDescription = null, tint = PillPalWarningText)
-            Text("Manual Releases", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = PillPalTextPrimary)
+            Text("Distributions Manuelles", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = PillPalTextPrimary)
         }
 
         // Active drop spinner simulation
@@ -3271,16 +3291,26 @@ fun ControlsView(viewModel: PillPalViewModel) {
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             val dispenseTriggers = listOf(
-                Triple("Release Morning Wheel", "morning", if (isSystemInDarkTheme()) CustomPaletteMint else CustomPaletteEmerald),
-                Triple("Release Midday Wheel", "midday", if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C)),
-                Triple("Release Night Wheel", "night", if (isSystemInDarkTheme()) Color(0xFF90CAF9) else Color(0xFF1F7A6D))
+                Pair("morning", if (isSystemInDarkTheme()) CustomPaletteMint else CustomPaletteEmerald),
+                Pair("midday", if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C)),
+                Pair("night", if (isSystemInDarkTheme()) Color(0xFF90CAF9) else Color(0xFF1F7A6D))
             )
 
-            dispenseTriggers.forEach { (label, batch, color) ->
+            dispenseTriggers.forEach { (batch, color) ->
+                val trLabel = when (batch) {
+                    "morning" -> "Distribuer Roue du Matin"
+                    "midday" -> "Distribuer Roue du Midi"
+                    else -> "Distribuer Roue du Soir"
+                }
                 Button(
                     onClick = {
                         scope.launch {
-                            activeDispenseProgressMessage = "IoT Signal Sent. Actuating rotary motor carousel for $batch drop..."
+                            val localBatch = when (batch) {
+                                "morning" -> "matin"
+                                "midday" -> "midi"
+                                else -> "soir"
+                            }
+                            activeDispenseProgressMessage = "Signal IoT envoyé. Actionnement du moteur rotatif pour le $localBatch..."
                             delay(1800)
                             viewModel.forceDispense(batch)
                             activeDispenseProgressMessage = null
@@ -3313,7 +3343,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                                 "midday" -> MiddaySunIcon(color = color, modifier = Modifier.size(24.dp))
                                 else -> NightMoonIcon(color = color, modifier = Modifier.size(24.dp))
                             }
-                            Text(label, color = PillPalTextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                            Text(trLabel, color = PillPalTextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                         }
                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null, tint = color, modifier = Modifier.size(16.dp))
                     }
@@ -3335,8 +3365,8 @@ fun ControlsView(viewModel: PillPalViewModel) {
             ) {
                 // Calibrate Row
                 ListItem(
-                    headlineContent = { Text("Calibrate & Home Carousels", fontWeight = FontWeight.Bold, fontSize = 15.sp) },
-                    supportingContent = { Text("Resets internal rotary rotors to 0° positions", fontSize = 12.sp, color = PillPalTextSecondary) },
+                    headlineContent = { Text("Calibrer & Centrer Carrousels", fontWeight = FontWeight.Bold, fontSize = 15.sp) },
+                    supportingContent = { Text("Réinitialise les rotors rotatifs internes à 0°", fontSize = 12.sp, color = PillPalTextSecondary) },
                     leadingContent = {
                         Box(
                             modifier = Modifier
@@ -3358,8 +3388,8 @@ fun ControlsView(viewModel: PillPalViewModel) {
 
                 // Reboot Row
                 ListItem(
-                    headlineContent = { Text("Restart Physical Device", fontWeight = FontWeight.Bold, fontSize = 15.sp) },
-                    supportingContent = { Text("Performs hard system power-cycle reset on wifi board", fontSize = 12.sp, color = PillPalTextSecondary) },
+                    headlineContent = { Text("Redémarrer l'Appareil Physique", fontWeight = FontWeight.Bold, fontSize = 15.sp) },
+                    supportingContent = { Text("Effectue une réinitialisation complète de la carte WiFi", fontSize = 12.sp, color = PillPalTextSecondary) },
                     leadingContent = {
                         Box(
                             modifier = Modifier
@@ -3407,7 +3437,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
-                    text = "Log Out Caregiver Session",
+                    text = "Déconnecter la Session Aidant",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
