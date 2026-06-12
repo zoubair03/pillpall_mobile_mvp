@@ -95,6 +95,21 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
     private val _wifiSending = MutableStateFlow(false)
     val wifiSending: StateFlow<Boolean> = _wifiSending.asStateFlow()
 
+    private val _patientName = MutableStateFlow("Ahmed")
+    val patientName: StateFlow<String> = _patientName.asStateFlow()
+
+    private val _patientAge = MutableStateFlow("72")
+    val patientAge: StateFlow<String> = _patientAge.asStateFlow()
+
+    private val _patientDob = MutableStateFlow("15/04/1954")
+    val patientDob: StateFlow<String> = _patientDob.asStateFlow()
+
+    fun updatePatientInfo(name: String, age: String, dob: String) {
+        _patientName.value = name
+        _patientAge.value = age
+        _patientDob.value = dob
+    }
+
     // Main App Real-Time states
     val schedules: StateFlow<List<ScheduleItem>> = repository.allSchedules
         .stateIn(

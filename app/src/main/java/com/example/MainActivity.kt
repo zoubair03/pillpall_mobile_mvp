@@ -1943,6 +1943,7 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
     val morningDispensed by viewModel.morningDoseDispensed.collectAsState()
     val middayDispensed by viewModel.middayDoseDispensed.collectAsState()
     val nightDispensed by viewModel.nightDoseDispensed.collectAsState()
+    val patientName by viewModel.patientName.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -1954,7 +1955,7 @@ fun HomeDashboard(viewModel: PillPalViewModel) {
         item {
             Column(modifier = Modifier.padding(vertical = 4.dp)) {
                 Text(
-                    text = "Bonjour, Ahmed",
+                    text = "Bonjour, $patientName",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary,
@@ -3132,8 +3133,64 @@ fun ControlsView(viewModel: PillPalViewModel) {
     val powerSource by viewModel.devicePowerStatus.collectAsState()
     val remainingPills by viewModel.pillsRemaining.collectAsState()
 
+    val patientName by viewModel.patientName.collectAsState()
+    val patientAge by viewModel.patientAge.collectAsState()
+    val patientDob by viewModel.patientDob.collectAsState()
+
     var activeDispenseProgressMessage by remember { mutableStateOf<String?>(null) }
+    var showProfileEditDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    if (showProfileEditDialog) {
+        var editName by remember { mutableStateOf(patientName) }
+        var editAge by remember { mutableStateOf(patientAge) }
+        var editDob by remember { mutableStateOf(patientDob) }
+
+        AlertDialog(
+            onDismissRequest = { showProfileEditDialog = false },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.updatePatientInfo(editName, editAge, editDob)
+                        showProfileEditDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = PillPalPrimary)
+                ) {
+                    Text("Enregistrer", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showProfileEditDialog = false }) {
+                    Text("Annuler", color = PillPalTextSecondary)
+                }
+            },
+            title = {
+                Text("Modifier les informations", fontWeight = FontWeight.Bold)
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = editName,
+                        onValueChange = { editName = it },
+                        label = { Text("Nom") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = editAge,
+                        onValueChange = { editAge = it },
+                        label = { Text("Âge") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = editDob,
+                        onValueChange = { editDob = it },
+                        label = { Text("Date de naissance") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -3156,6 +3213,61 @@ fun ControlsView(viewModel: PillPalViewModel) {
                 color = PillPalTextSecondary,
                 fontWeight = FontWeight.Medium
             )
+        }
+
+        // Profile Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = PillPalSurface),
+            shape = RoundedCornerShape(24.dp),
+            border = BorderStroke(1.dp, PillPalDivider)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(PillPalPrimary, CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = patientName,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = PillPalTextPrimary
+                        )
+                        Text(
+                            text = "$patientAge ans • Né(e) le $patientDob",
+                            fontSize = 13.sp,
+                            color = PillPalTextSecondary
+                        )
+                    }
+                }
+                IconButton(onClick = { showProfileEditDialog = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Modifier le profil",
+                        tint = PillPalTextSecondary
+                    )
+                }
+            }
         }
 
         // Live Diagnostics telemetry styled Card
