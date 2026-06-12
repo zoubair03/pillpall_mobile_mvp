@@ -472,7 +472,7 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 .fillMaxWidth()
                 .border(2.dp, PillPalPrimary.copy(alpha = 0.25f), RoundedCornerShape(32.dp)),
             shape = RoundedCornerShape(32.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = PillPalSurface),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column(
@@ -706,6 +706,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
     var password by remember { mutableStateOf("") }
     var agree by remember { mutableStateOf(false) }
     var validationError by remember { mutableStateOf<String?>(null) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -718,7 +719,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
             onClick = { viewModel.navigateTo(PillPalViewModel.Screen.SIGN_IN) },
             modifier = Modifier
                 .size(48.dp)
-                .background(Color.White, CircleShape)
+                .background(PillPalSurface, CircleShape)
                 .border(1.dp, PillPalDivider, CircleShape)
         ) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go back", tint = PillPalPrimary)
@@ -731,7 +732,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 .fillMaxWidth()
                 .border(1.5.dp, PillPalPrimary.copy(alpha = 0.2f), RoundedCornerShape(28.dp)),
             shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = PillPalSurface),
             elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
         ) {
             Column(
@@ -802,24 +803,39 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                         )
                     }
 
-                    // DOB
+                    // DOB (Interactive Date Selector)
                     Column(modifier = Modifier.weight(1.5f)) {
                         Text("DATE OF BIRTH", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                         Spacer(modifier = Modifier.height(6.dp))
-                        OutlinedTextField(
-                            value = dob,
-                            onValueChange = { dob = it },
-                            placeholder = { Text("YYYY-MM-DD") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            singleLine = true,
-                            maxLines = 1,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = PillPalPrimary,
-                                unfocusedBorderColor = PillPalDivider
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { showDatePicker = true }
+                        ) {
+                            OutlinedTextField(
+                                value = dob.ifBlank { "Select Date" },
+                                onValueChange = {},
+                                readOnly = true,
+                                enabled = false,
+                                placeholder = { Text("YYYY-MM-DD") },
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.DateRange,
+                                        contentDescription = "Show Date Picker calendar dialog icon trigger",
+                                        tint = PillPalPrimary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(14.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    disabledTextColor = if (dob.isNotBlank()) PillPalTextPrimary else PillPalTextSecondary,
+                                    disabledBorderColor = PillPalDivider,
+                                    disabledPlaceholderColor = PillPalTextSecondary,
+                                    disabledTrailingIconColor = PillPalPrimary
+                                )
                             )
-                        )
+                        }
                     }
                 }
 
@@ -936,6 +952,196 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 }
             }
         }
+
+        // PillPal Premium Native-Style Custom Interactive Date Selector Modal
+        if (showDatePicker) {
+            var selectedYear by remember { mutableStateOf(1980) }
+            var selectedMonth by remember { mutableStateOf(6) } // June
+            var selectedDay by remember { mutableStateOf(15) }
+
+            AlertDialog(
+                onDismissRequest = { showDatePicker = false },
+                title = {
+                    Text(
+                        text = "Select Date of Birth",
+                        fontWeight = FontWeight.Bold,
+                        color = PillPalTextPrimary,
+                        fontSize = 18.sp
+                    )
+                },
+                text = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = "Please choose your date of birth. This will be linked to your PillPal caregiver credentials.",
+                            fontSize = 12.sp,
+                            color = PillPalTextSecondary,
+                            lineHeight = 16.sp
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            // Month selector card
+                            Box(modifier = Modifier.weight(1.2f)) {
+                                var monthExpanded by remember { mutableStateOf(false) }
+                                Card(
+                                    onClick = { monthExpanded = true },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.5f))
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 6.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text("MONTH", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        Text(
+                                            text = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[selectedMonth - 1],
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 13.sp,
+                                            color = PillPalTextPrimary
+                                        )
+                                    }
+                                }
+                                DropdownMenu(
+                                    expanded = monthExpanded,
+                                    onDismissRequest = { monthExpanded = false },
+                                    modifier = Modifier.background(PillPalSurface)
+                                ) {
+                                    listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec").forEachIndexed { index, name ->
+                                        DropdownMenuItem(
+                                            text = { Text(name, fontWeight = FontWeight.Bold, color = PillPalTextPrimary) },
+                                            onClick = {
+                                                selectedMonth = index + 1
+                                                monthExpanded = false
+                                                val maxDays = when (selectedMonth) {
+                                                    2 -> if (selectedYear % 4 == 0) 29 else 28
+                                                    4, 6, 9, 11 -> 30
+                                                    else -> 31
+                                                }
+                                                if (selectedDay > maxDays) {
+                                                    selectedDay = maxDays
+                                                }
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Day Selector Card
+                            Box(modifier = Modifier.weight(1f)) {
+                                var dayExpanded by remember { mutableStateOf(false) }
+                                Card(
+                                    onClick = { dayExpanded = true },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.5f))
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text("DAY", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        Text(
+                                            text = selectedDay.toString(),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 13.sp,
+                                            color = PillPalTextPrimary
+                                        )
+                                    }
+                                }
+                                DropdownMenu(
+                                    expanded = dayExpanded,
+                                    onDismissRequest = { dayExpanded = false },
+                                    modifier = Modifier.background(PillPalSurface)
+                                ) {
+                                    val maxDays = when (selectedMonth) {
+                                        2 -> if (selectedYear % 4 == 0) 29 else 28
+                                        4, 6, 9, 11 -> 30
+                                        else -> 31
+                                    }
+                                    (1..maxDays).forEach { d ->
+                                        DropdownMenuItem(
+                                            text = { Text(d.toString(), fontWeight = FontWeight.Bold, color = PillPalTextPrimary) },
+                                            onClick = {
+                                                selectedDay = d
+                                                dayExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Year Selector Card
+                            Box(modifier = Modifier.weight(1.3f)) {
+                                var yearExpanded by remember { mutableStateOf(false) }
+                                Card(
+                                    onClick = { yearExpanded = true },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.5f))
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text("YEAR", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        Text(
+                                            text = selectedYear.toString(),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 13.sp,
+                                            color = PillPalTextPrimary
+                                        )
+                                    }
+                                }
+                                DropdownMenu(
+                                    expanded = yearExpanded,
+                                    onDismissRequest = { yearExpanded = false },
+                                    modifier = Modifier.background(PillPalSurface)
+                                ) {
+                                    (2026 downTo 1920).forEach { y ->
+                                        DropdownMenuItem(
+                                            text = { Text(y.toString(), fontWeight = FontWeight.Bold, color = PillPalTextPrimary) },
+                                            onClick = {
+                                                selectedYear = y
+                                                yearExpanded = false
+                                                if (selectedMonth == 2 && selectedDay > 28) {
+                                                    val maxDays = if (selectedYear % 4 == 0) 29 else 28
+                                                    if (selectedDay > maxDays) {
+                                                        selectedDay = maxDays
+                                                    }
+                                                }
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            val formattedMonth = String.format("%02d", selectedMonth)
+                            val formattedDay = String.format("%02d", selectedDay)
+                            dob = "$selectedYear-$formattedMonth-$formattedDay"
+                            showDatePicker = false
+                        }
+                    ) {
+                        Text("Confirm", fontWeight = FontWeight.Bold, color = PillPalPrimaryDark)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDatePicker = false }) {
+                        Text("Cancel", color = PillPalTextSecondary)
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -1027,7 +1233,7 @@ fun EnterCodeScreen(viewModel: PillPalViewModel) {
                                     shape = RoundedCornerShape(8.dp)
                                 )
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White)
+                                .background(PillPalSurface)
                                 .clickable {
                                     // Clicking box sets a demo digit
                                     viewModel.updateCodeDigit(i, (1..9).random().toString())
@@ -1099,7 +1305,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                 onClick = { viewModel.navigateTo(PillPalViewModel.Screen.CREATE_PROFILE) },
                 modifier = Modifier
                     .size(44.dp)
-                    .background(Color.White, CircleShape)
+                    .background(PillPalSurface, CircleShape)
                     .border(1.dp, PillPalDivider, CircleShape)
             ) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go back", tint = PillPalPrimary)
@@ -1127,7 +1333,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                 .fillMaxWidth()
                 .border(1.5.dp, PillPalPrimary.copy(alpha = 0.2f), RoundedCornerShape(28.dp)),
             shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = PillPalSurface),
             elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
         ) {
             Column(
@@ -1304,7 +1510,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 onClick = { viewModel.navigateTo(PillPalViewModel.Screen.NO_DEVICE) },
                 modifier = Modifier
                     .size(44.dp)
-                    .background(Color.White, CircleShape)
+                    .background(PillPalSurface, CircleShape)
                     .border(1.dp, PillPalDivider, CircleShape)
             ) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go back", tint = PillPalPrimary)
@@ -1377,7 +1583,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 .fillMaxWidth()
                 .border(1.5.dp, PillPalPrimary.copy(alpha = 0.2f), RoundedCornerShape(28.dp)),
             shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = PillPalSurface),
             elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
         ) {
             Column(
@@ -1402,56 +1608,76 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 // Select WiFi Network Dropdown
                 Text("CHOOSE WIFI NETWORK (SSID)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
                 Spacer(modifier = Modifier.height(6.dp))
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    OutlinedTextField(
-                        value = selectedSSID.ifBlank { "Choose a network..." },
-                        onValueChange = {},
-                        readOnly = true,
+                BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                    val boxWidth = maxWidth
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { showDropdown = true },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Menu, 
-                                contentDescription = null, 
-                                tint = PillPalPrimary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        trailingIcon = {
-                            IconButton(onClick = { showDropdown = true }) {
+                            .clickable { showDropdown = true }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedSSID.ifBlank { "Choose a network..." },
+                            onValueChange = {},
+                            readOnly = true,
+                            enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Menu, 
+                                    contentDescription = null, 
+                                    tint = PillPalPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            trailingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight, 
                                     contentDescription = "SSID list dropdown",
-                                    tint = PillPalPrimary
+                                    tint = PillPalPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            shape = RoundedCornerShape(14.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                disabledTextColor = if (selectedSSID.isNotBlank()) PillPalTextPrimary else PillPalTextSecondary,
+                                disabledBorderColor = PillPalDivider,
+                                disabledLeadingIconColor = PillPalPrimary,
+                                disabledTrailingIconColor = PillPalPrimary,
+                                disabledPlaceholderColor = PillPalTextSecondary
+                            )
+                        )
+
+                        DropdownMenu(
+                            expanded = showDropdown,
+                            onDismissRequest = { showDropdown = false },
+                            modifier = Modifier
+                                .width(boxWidth)
+                                .background(PillPalSurface)
+                                .border(1.5.dp, PillPalPrimary.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+                        ) {
+                            listOf("HomeWifi_5G", "SweetHome_Router", "PillPal_Dev_Net", "CareGiver_Hotspot").forEach { ssid ->
+                                DropdownMenuItem(
+                                    text = { 
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Menu, 
+                                                contentDescription = null, 
+                                                tint = PillPalPrimary, 
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Text(ssid, fontWeight = FontWeight.Bold, color = PillPalTextPrimary, fontSize = 14.sp)
+                                        }
+                                    },
+                                    onClick = {
+                                        viewModel.selectSSID(ssid)
+                                        showDropdown = false
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
                                 )
                             }
-                        },
-                        shape = RoundedCornerShape(14.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = if (selectedSSID.isNotBlank()) PillPalTextPrimary else PillPalTextSecondary,
-                            unfocusedTextColor = if (selectedSSID.isNotBlank()) PillPalTextPrimary else PillPalTextSecondary,
-                            focusedBorderColor = PillPalPrimary,
-                            unfocusedBorderColor = PillPalDivider
-                        )
-                    )
-
-                    DropdownMenu(
-                        expanded = showDropdown,
-                        onDismissRequest = { showDropdown = false },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, PillPalDivider, RoundedCornerShape(12.dp))
-                            .background(Color.White)
-                    ) {
-                        listOf("HomeWifi_5G", "SweetHome_Router", "PillPal_Dev_Net", "CareGiver_Hotspot").forEach { ssid ->
-                            DropdownMenuItem(
-                                text = { Text(ssid, fontWeight = FontWeight.Bold, color = PillPalTextPrimary, fontSize = 14.sp) },
-                                onClick = {
-                                    viewModel.selectSSID(ssid)
-                                    showDropdown = false
-                                }
-                            )
                         }
                     }
                 }
@@ -1554,7 +1780,7 @@ fun PairedSuccessScreen(viewModel: PillPalViewModel) {
                 .fillMaxWidth()
                 .border(2.dp, PillPalSuccess.copy(alpha = 0.3f), RoundedCornerShape(32.dp)),
             shape = RoundedCornerShape(32.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = PillPalSurface),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column(
@@ -2100,13 +2326,13 @@ fun DoseItemCard(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = null,
-                            tint = if (isSystemInDarkTheme()) PillPalPrimaryDark else Color.White,
+                            tint = if (isSystemInDarkTheme()) NaturalDarkGreen else Color.White,
                             modifier = Modifier.size(18.dp) // Larger check icon
                         )
                         Text(
                             text = "Dispensed",
                             fontSize = 14.sp, // Bigger status font size
-                            color = if (isSystemInDarkTheme()) PillPalPrimaryDark else Color.White,
+                            color = if (isSystemInDarkTheme()) NaturalDarkGreen else Color.White,
                             fontWeight = FontWeight.ExtraBold,
                             maxLines = 1,
                             softWrap = false
@@ -2173,7 +2399,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                         .weight(1f)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable { viewModel.setScheduleTab(tabName) }
-                        .background(if (selected) Color.White else Color.Transparent)
+                        .background(if (selected) PillPalSurface else Color.Transparent)
                         .padding(vertical = 12.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -2327,7 +2553,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                 ) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = PillPalSurface),
                         border = BorderStroke(1.dp, PillPalDivider),
                         shape = RoundedCornerShape(24.dp)
                     ) {
@@ -2770,7 +2996,7 @@ fun HistoryView(viewModel: PillPalViewModel) {
                 items(filteredLogs) { log ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = PillPalSurface),
                         shape = RoundedCornerShape(16.dp),
                         border = BorderStroke(1.dp, PillPalDivider)
                     ) {
@@ -2958,7 +3184,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                     // Wireless card
                     Card(
                         modifier = Modifier.weight(1f),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = PillPalSurface),
                         shape = RoundedCornerShape(14.dp),
                         border = BorderStroke(1.dp, PillPalDivider)
                     ) {
@@ -2989,7 +3215,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                     // Power card
                     Card(
                         modifier = Modifier.weight(1f),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = PillPalSurface),
                         shape = RoundedCornerShape(14.dp),
                         border = BorderStroke(1.dp, PillPalDivider)
                     ) {
@@ -3100,7 +3326,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
         // Maintenance rows section
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = PillPalSurface),
             border = BorderStroke(1.dp, PillPalDivider),
             shape = RoundedCornerShape(24.dp)
         ) {
@@ -3122,6 +3348,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                         }
                     },
                     trailingContent = { Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = null) },
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     modifier = Modifier.clickable {
                         viewModel.runCalibration()
                     }
@@ -3144,6 +3371,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                         }
                     },
                     trailingContent = { Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = null) },
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     modifier = Modifier.clickable {
                         viewModel.runRestart()
                     }
