@@ -2574,7 +2574,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = "Représentation physique des 3 roues de dosage intégrées (7 fentes chacune) de PillPal.",
+                                text = "Représentation physique des 3 roues de dosage intégrées (7 chacune) de PillPal.",
                                 fontSize = 13.sp,
                                 color = PillPalTextSecondary,
                                 textAlign = TextAlign.Center
@@ -2610,7 +2610,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                                         color = PillPalPrimaryDark
                                     )
                                     Text(
-                                        text = "sur 21 fentes",
+                                        text = "sur 21 compartiment",
                                         fontSize = 12.sp,
                                         color = PillPalTextSecondary,
                                         fontWeight = FontWeight.Bold
@@ -2631,7 +2631,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                             ) {
                                 // 1. Morning Wheel Row
                                 WheelBlueprintItem(
-                                    title = "Morning Wheel",
+                                    title = "Matin",
                                     filledCount = morningPills,
                                     iconContent = {
                                         val iconColor = if (isSystemInDarkTheme()) CustomPaletteMint else CustomPaletteEmerald
@@ -2642,7 +2642,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
 
                                 // 2. Midday Wheel Row
                                 WheelBlueprintItem(
-                                    title = "Midday Wheel",
+                                    title = "Midi",
                                     filledCount = middayPills,
                                     iconContent = {
                                         val iconColor = if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C)
@@ -2653,7 +2653,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
 
                                 // 3. Night Wheel Row
                                 WheelBlueprintItem(
-                                    title = "Night Wheel",
+                                    title = "Soir",
                                     filledCount = nightPills,
                                     iconContent = {
                                         val iconColor = if (isSystemInDarkTheme()) Color(0xFF90CAF9) else Color(0xFF1F7A6D)
@@ -2669,7 +2669,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text("Capacité restante : ${((pillsRemaining / 21f) * 100).toInt()}%", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
-                                Text("Fentes vides : ${21 - pillsRemaining}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C))
+                                Text("Compartiment vides : ${21 - pillsRemaining}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (isSystemInDarkTheme()) Color(0xFFFFB480) else Color(0xFFEA580C))
                             }
                         }
                     }
@@ -2692,7 +2692,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.White)
-                        Text("Recharger & Réinitialiser (21 fentes)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Recharger & Réinitialiser", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -2729,7 +2729,7 @@ fun ScheduleHub(viewModel: PillPalViewModel) {
             },
             text = {
                 Text(
-                    text = "Êtes-vous sûr de vouloir recharger les cartouches rotatives ? Cela réinitialisera les 3 roues intégrées à leur pleine capacité (21 fentes de pilules actives restantes).",
+                    text = "Êtes-vous sûr de vouloir recharger les cartouches rotatives ? Cela réinitialisera les 3 roues intégrées à leur pleine capacité (21 compartiment de pilules actives restantes).",
                     fontSize = 15.sp,
                     color = PillPalTextSecondary
                 )
@@ -2878,7 +2878,7 @@ fun WheelBlueprintItem(
             ) {
                 iconContent()
                 Text(
-                    text = "$title ($filledCount/7 slots filled)",
+                    text = "$title ($filledCount/7 Remplit)",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = PillPalTextPrimary
@@ -3187,7 +3187,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                         )
                     }
                     Text(
-                        text = "Télémesure des Diagnostics en Direct",
+                        text = "Appareil",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = PillPalTextPrimary
@@ -3243,7 +3243,7 @@ fun ControlsView(viewModel: PillPalViewModel) {
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text("SOURCE D'ALIMENTATION", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = PillPalTextSecondary)
-                            val localPowerSource = if (powerSource == "MAIN LINE POWER") "SECTEUR" else if (powerSource == "BACKUP BATTERY ACTIVE") "BATTERIE SECOURS" else powerSource
+                            val localPowerSource = if (powerSource == "MAIN LINE POWER") "SECTEUR" else if (powerSource == "BACKUP BATTERY ACTIVE") "BATTERIE" else powerSource
                             Text(
                                 text = localPowerSource,
                                 fontWeight = FontWeight.Bold,
