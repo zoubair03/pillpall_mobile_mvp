@@ -1,0 +1,6 @@
+{
+  "name": "PillPal",
+  "description": "An intuitive, high-contrast, large-button smart pill dispenser companion app designed for elderly users and caregivers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
