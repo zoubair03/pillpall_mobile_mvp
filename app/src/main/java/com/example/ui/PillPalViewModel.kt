@@ -78,12 +78,15 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
     private val _verificationResendTimer = MutableStateFlow(58)
     val verificationResendTimer: StateFlow<Int> = _verificationResendTimer.asStateFlow()
 
-    // Bluetooth linking simulation states
-    private val _bluetoothScanning = MutableStateFlow(false)
-    val bluetoothScanning: StateFlow<Boolean> = _bluetoothScanning.asStateFlow()
+    // WiFi linking simulation states (Device hotspot discovery)
+    private val _wifiScanning = MutableStateFlow(false)
+    val wifiScanning: StateFlow<Boolean> = _wifiScanning.asStateFlow()
 
     private val _scannedDevices = MutableStateFlow<List<String>>(emptyList())
     val scannedDevices: StateFlow<List<String>> = _scannedDevices.asStateFlow()
+
+    private val _selectedDeviceWifi = MutableStateFlow("PillPal-SN8824")
+    val selectedDeviceWifi: StateFlow<String> = _selectedDeviceWifi.asStateFlow()
 
     // Wifi provision simulation states
     private val _selectedSSID = MutableStateFlow("")
@@ -236,15 +239,21 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
         _verificationResendTimer.value = 59
     }
 
-    // Simulate Bluetooth Device search
-    fun startBluetoothScanning() {
-        _bluetoothScanning.value = true
+    // Simulate PillPal WiFi Hotspot search
+    fun scanPillpalWifiNetworks() {
+        _wifiScanning.value = true
         _scannedDevices.value = emptyList()
         viewModelScope.launch {
             delay(1500) // Realistic delay
             _scannedDevices.value = listOf("PillPal-SN8824", "PillPal-Alpha", "SmartDispenser_B9")
-            _bluetoothScanning.value = false
+            _wifiScanning.value = false
         }
+    }
+
+    // Connect to specific PillPal device temporary WiFi network
+    fun connectToDeviceWifi(ssid: String) {
+        _selectedDeviceWifi.value = ssid
+        navigateTo(Screen.CONNECT_WIFI)
     }
 
     // WiFi Provisioning
@@ -256,7 +265,8 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
         _wifiPassword.value = p
     }
 
-    fun sendWifiCredentials() {
+    // Provision local WiFi credentials on the device
+    fun sendWifiCredentialsLocal(ssid: String, password: String) {
         _wifiSending.value = true
         viewModelScope.launch {
             delay(2000) // Connect simulation
@@ -264,9 +274,12 @@ class PillPalViewModel(application: Application) : AndroidViewModel(application)
             recordEvent(
                 type = "calibrated",
                 title = "Connexion Wifi Réussie",
-                description = "Distributeur connecté avec succès au SSID : ${_selectedSSID.value}",
+                description = "Distributeur connecté avec succès au SSID : $ssid",
                 category = "Statut Matériel"
             )
+            // Note: Eventually, this will perform a local HTTP POST request 
+            // to the device's own hotspot address (e.g. http://192.168.4.1/config)
+            // to transmit the home WiFi SSID and password credentials.
             navigateTo(Screen.PAIRED_SUCCESS)
         }
     }

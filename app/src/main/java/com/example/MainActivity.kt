@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -450,6 +451,9 @@ fun PillPalBottomNavBar(
 // ==========================================
 @Composable
 fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var email by remember { mutableStateOf("caregiver@pillpal.com") }
     var password by remember { mutableStateOf("••••••••") }
     var loginError by remember { mutableStateOf<String?>(null) }
@@ -614,6 +618,8 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
                 // SIGN IN BUTTON (Accesses Dashboard/MAIN_HUB directly)
                 Button(
                     onClick = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
                         if (email.isBlank() || password.isBlank()) {
                             loginError = "Veuillez entrer l'adresse email et le mot de passe"
                         } else {
@@ -660,7 +666,11 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
 
                 // HIGH-CONTRAST REGISTER OUTLINED BUTTON
                 OutlinedButton(
-                    onClick = { viewModel.navigateTo(PillPalViewModel.Screen.CREATE_PROFILE) },
+                    onClick = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                        viewModel.navigateTo(PillPalViewModel.Screen.CREATE_PROFILE)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(54.dp)
@@ -699,6 +709,9 @@ fun CaregiverSignInScreen(viewModel: PillPalViewModel) {
 // ==========================================
 @Composable
 fun CreateProfileScreen(viewModel: PillPalViewModel) {
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var name by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
     var dob by remember { mutableStateOf("") }
@@ -716,7 +729,11 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
             .padding(horizontal = 24.dp, vertical = 20.dp)
     ) {
         IconButton(
-            onClick = { viewModel.navigateTo(PillPalViewModel.Screen.SIGN_IN) },
+            onClick = {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+                viewModel.navigateTo(PillPalViewModel.Screen.SIGN_IN)
+            },
             modifier = Modifier
                 .size(48.dp)
                 .background(PillPalSurface, CircleShape)
@@ -739,18 +756,22 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 modifier = Modifier.padding(26.dp)
             ) {
                 Text(
-                    text = "Inscription de l'aidant",
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = PillPalTextPrimary
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "Remplissez vos détails de profil ci-dessous pour lancer la liaison sans fil avec votre appareil PillPal.",
-                    fontSize = 13.sp,
-                    color = PillPalTextSecondary,
-                    lineHeight = 18.sp
-                )
+    text = "Inscription",
+    fontSize = 28.sp,
+    fontWeight = FontWeight.ExtraBold,
+    color = PillPalTextPrimary,
+    textAlign = TextAlign.Center,
+    modifier = Modifier.fillMaxWidth() // <-- Force le composant à occuper toute la largeur
+)
+Spacer(modifier = Modifier.height(6.dp))
+Text(
+    text = "Inscrivez-vous pour lancer la liaison sans fil avec votre appareil PillPal.",
+    fontSize = 13.sp,
+    color = PillPalTextSecondary,
+    lineHeight = 18.sp,
+    textAlign = TextAlign.Center,
+    modifier = Modifier.fillMaxWidth() // <-- Force le composant à occuper toute la largeur
+)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -761,7 +782,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
-                        placeholder = { Text("ex. Jeanne Dupont") },
+                        placeholder = { Text("Jeanne Dupont") },
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = PillPalPrimary, modifier = Modifier.size(20.dp)) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -780,64 +801,105 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
 
                 // Row for Age and DOB
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    // Age
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text("ÂGE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
-                        Spacer(modifier = Modifier.height(6.dp))
-                        OutlinedTextField(
-                            value = age,
-                            onValueChange = { age = it },
-                            placeholder = { Text("ex. 45") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            singleLine = true,
-                            maxLines = 1,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = PillPalPrimary,
-                                unfocusedBorderColor = PillPalDivider
-                            )
-                        )
-                    }
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(IntrinsicSize.Min),
+    horizontalArrangement = Arrangement.spacedBy(12.dp)
+) {
+    // Age
+    Column(
+        modifier = Modifier
+            .weight(0.3f)
+            .fillMaxHeight() // 2. Tells this Column to fill that forced height
+    ) {
+        Text("ÂGE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+        Spacer(modifier = Modifier.height(6.dp))
+        OutlinedTextField(
+            value = age,
+            onValueChange = { age = it },
+            placeholder = { Text("45") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Face,
+                    contentDescription = null,
+                    tint = PillPalPrimary,
+                    modifier = Modifier.size(20.dp)
+                )
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            singleLine = true,
+            maxLines = 1,
+            // 3. Fills both width of weight, and maximum calculated height
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+            shape = RoundedCornerShape(14.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = PillPalPrimary,
+                unfocusedBorderColor = PillPalDivider
+            )
+        )
+    }
 
-                    // DOB (Interactive Date Selector)
-                    Column(modifier = Modifier.weight(1.5f)) {
-                        Text("DATE DE NAISSANCE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { showDatePicker = true }
-                        ) {
-                            OutlinedTextField(
-                                value = dob.ifBlank { "Choisir une date" },
-                                onValueChange = {},
-                                readOnly = true,
-                                enabled = false,
-                                placeholder = { Text("AAAA-MM-JJ") },
-                                trailingIcon = {
-                                     Icon(
-                                        imageVector = Icons.Default.DateRange,
-                                        contentDescription = "Show Date Picker calendar dialog icon trigger",
-                                        tint = PillPalPrimary,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(14.dp),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    disabledTextColor = if (dob.isNotBlank()) PillPalTextPrimary else PillPalTextSecondary,
-                                    disabledBorderColor = PillPalDivider,
-                                    disabledPlaceholderColor = PillPalTextSecondary,
-                                    disabledTrailingIconColor = PillPalPrimary
-                                )
-                            )
-                        }
-                    }
-                }
+    // DOB (Interactive Date Selector)
+    Column(
+        modifier = Modifier
+            .weight(0.7f)
+            .fillMaxHeight() // 2. Tells this Column to fill that forced height
+    ) {
+        Text("DATE DE NAISSANCE", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = PillPalTextPrimary)
+        Spacer(modifier = Modifier.height(6.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight() // 3. Ensure the Box fills the height space
+        ) {
+            OutlinedTextField(
+                value = dob,
+                onValueChange = {},
+                readOnly = true,
+                // TIP: Keeping enabled=true but readOnly=true preserves crisp sizing and text styling
+                enabled = true, 
+                placeholder = { Text("22/08/1988", color = PillPalTextSecondary) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = null,
+                        tint = PillPalPrimary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Show Date Picker",
+                        tint = PillPalPrimary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                },
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                shape = RoundedCornerShape(14.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = PillPalTextPrimary,
+                    unfocusedTextColor = PillPalTextPrimary,
+                    focusedBorderColor = PillPalDivider,
+                    unfocusedBorderColor = PillPalDivider,
+                    focusedPlaceholderColor = PillPalTextSecondary,
+                    unfocusedPlaceholderColor = PillPalTextSecondary,
+                    focusedLeadingIconColor = PillPalPrimary,
+                    unfocusedLeadingIconColor = PillPalPrimary,
+                    focusedTrailingIconColor = PillPalPrimary,
+                    unfocusedTrailingIconColor = PillPalPrimary
+                )
+            )
+            // Transparent overlay box to intercept click events and trigger date picker
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { showDatePicker = true }
+            )
+        }
+    }
+}
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -905,7 +967,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                         colors = CheckboxDefaults.colors(checkedColor = PillPalPrimary)
                     )
                     Text(
-                        text = "J'autorise le partage de mes données avec le distributeur PillPal.",
+                        text = "J'autorise le partage de mes données avec PILLPALL.",
                         fontSize = 13.sp,
                         color = PillPalTextSecondary
                     )
@@ -926,6 +988,8 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                 // SUBMIT BUTTON -> GOES TO DEVICE SETUP (NO_DEVICE SCREEN)
                 Button(
                     onClick = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
                         if (name.isBlank() || email.isBlank() || password.isBlank() || age.isBlank() || dob.isBlank()) {
                             validationError = "Veuillez remplir tous les champs demandés"
                         } else if (!agree) {
@@ -946,7 +1010,7 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("S'inscrire & Démarrer la Configuration", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Démarrer la Configuration", fontSize = 16.sp, fontWeight = FontWeight.Bold,textAlign = TextAlign.Center)
                         Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Proceed link setup", modifier = Modifier.size(18.dp))
                     }
                 }
@@ -961,6 +1025,8 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
 
             AlertDialog(
                 onDismissRequest = { showDatePicker = false },
+                shape = RoundedCornerShape(24.dp),
+                containerColor = PillPalSurface,
                 title = {
                     Text(
                         text = "Sélectionner la Date de Naissance",
@@ -991,20 +1057,32 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                 Card(
                                     onClick = { monthExpanded = true },
                                     modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.5f))
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.25f))
                                 ) {
                                     Column(
-                                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 6.dp),
+                                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Text("MOIS", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = listOf("Janv", "Févr", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc")[selectedMonth - 1],
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp,
-                                            color = PillPalTextPrimary
-                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = listOf("Janv", "Févr", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc")[selectedMonth - 1],
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 13.sp,
+                                                color = PillPalTextPrimary
+                                            )
+                                            Icon(
+                                                imageVector = Icons.Default.ArrowDropDown,
+                                                contentDescription = null,
+                                                tint = PillPalPrimary,
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                        }
                                     }
                                 }
                                 DropdownMenu(
@@ -1038,20 +1116,32 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                 Card(
                                     onClick = { dayExpanded = true },
                                     modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.5f))
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.25f))
                                 ) {
                                     Column(
                                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Text("JOUR", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = selectedDay.toString(),
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp,
-                                            color = PillPalTextPrimary
-                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = selectedDay.toString(),
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 13.sp,
+                                                color = PillPalTextPrimary
+                                            )
+                                            Icon(
+                                                imageVector = Icons.Default.ArrowDropDown,
+                                                contentDescription = null,
+                                                tint = PillPalPrimary,
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                        }
                                     }
                                 }
                                 DropdownMenu(
@@ -1082,20 +1172,32 @@ fun CreateProfileScreen(viewModel: PillPalViewModel) {
                                 Card(
                                     onClick = { yearExpanded = true },
                                     modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.5f))
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.25f))
                                 ) {
                                     Column(
                                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Text("ANNÉE", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = PillPalPrimary)
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = selectedYear.toString(),
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp,
-                                            color = PillPalTextPrimary
-                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = selectedYear.toString(),
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 13.sp,
+                                                color = PillPalTextPrimary
+                                            )
+                                            Icon(
+                                                imageVector = Icons.Default.ArrowDropDown,
+                                                contentDescription = null,
+                                                tint = PillPalPrimary,
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                        }
                                     }
                                 }
                                 DropdownMenu(
@@ -1282,11 +1384,11 @@ fun EnterCodeScreen(viewModel: PillPalViewModel) {
 }
 
 // ==========================================
-// SCREEN 4: BLUETOOTH PAIRING SETUP (Image 10)
+// SCREEN 4: LOCAL DEVICE HOTSPOT SETUP (Image 10)
 // ==========================================
 @Composable
 fun NoDeviceScreen(viewModel: PillPalViewModel) {
-    val isScanning by viewModel.bluetoothScanning.collectAsState()
+    val isScanning by viewModel.wifiScanning.collectAsState()
     val scannedDevices by viewModel.scannedDevices.collectAsState()
 
     Column(
@@ -1340,7 +1442,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                 modifier = Modifier.padding(26.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Large bluetooth symbol circle with pulse styling
+                // Large WiFi symbol circle with pulse styling
                 Box(
                     modifier = Modifier
                         .size(150.dp)
@@ -1361,7 +1463,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Search, 
-                                contentDescription = "BLE Discovery Radar",
+                                contentDescription = "WiFi Discovery Radar",
                                 tint = Color.White,
                                 modifier = Modifier.size(32.dp)
                             )
@@ -1382,7 +1484,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Allumez votre distributeur physique PillPal pour que nous puissions détecter et enregistrer l'appareil via Bluetooth (BLE).",
+                    text = "Allumez votre distributeur physique PillPal. Il crée son propre réseau Wi-Fi le temps de la configuration — sélectionnez-le ci-dessous pour continuer.",
                     fontSize = 14.sp,
                     color = PillPalTextSecondary,
                     textAlign = TextAlign.Center,
@@ -1393,7 +1495,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
 
                 if (!isScanning && scannedDevices.isEmpty()) {
                     Button(
-                        onClick = { viewModel.startBluetoothScanning() },
+                        onClick = { viewModel.scanPillpalWifiNetworks() },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(54.dp),
@@ -1406,7 +1508,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
-                            Text("Rechercher l'Appareil (BLE)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            Text("Rechercher les Réseaux Wi-Fi", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 } else if (isScanning) {
@@ -1416,7 +1518,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                     ) {
                         CircularProgressIndicator(color = PillPalPrimary, modifier = Modifier.size(36.dp), strokeWidth = 3.dp)
                         Text(
-                            text = "Recherche des fréquences à proximité...", 
+                            text = "Recherche des réseaux Wi-Fi à proximité...", 
                             fontSize = 13.sp, 
                             color = PillPalPrimaryDark, 
                             fontWeight = FontWeight.SemiBold
@@ -1424,7 +1526,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                     }
                 } else {
                     Text(
-                        text = "CHOISIR L'APPAREIL DÉTECTÉ :",
+                        text = "RÉSEAUX PILLPAL DÉTECTÉS :",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = PillPalTextSecondary,
@@ -1438,7 +1540,7 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 5.dp)
-                                .clickable { viewModel.navigateTo(PillPalViewModel.Screen.CONNECT_WIFI) }
+                                .clickable { viewModel.connectToDeviceWifi(device) }
                                 .border(1.dp, PillPalPrimary.copy(alpha = 0.3f), RoundedCornerShape(16.dp)),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(containerColor = PillPalSuccessBg.copy(alpha = 0.4f))
@@ -1487,9 +1589,13 @@ fun NoDeviceScreen(viewModel: PillPalViewModel) {
 // ==========================================
 @Composable
 fun ConnectWifiScreen(viewModel: PillPalViewModel) {
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val selectedSSID by viewModel.selectedSSID.collectAsState()
     val password by viewModel.wifiPassword.collectAsState()
     val isSending by viewModel.wifiSending.collectAsState()
+    val selectedDeviceWifi by viewModel.selectedDeviceWifi.collectAsState()
 
     var showDropdown by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -1507,7 +1613,11 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { viewModel.navigateTo(PillPalViewModel.Screen.NO_DEVICE) },
+                onClick = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                    viewModel.navigateTo(PillPalViewModel.Screen.NO_DEVICE)
+                },
                 modifier = Modifier
                     .size(44.dp)
                     .background(PillPalSurface, CircleShape)
@@ -1533,7 +1643,7 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        // Bluetooth BLE link confirmation banner
+        // Device WiFi link confirmation banner
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1554,20 +1664,20 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check, 
-                        contentDescription = "Bluetooth Linked Icon", 
+                        contentDescription = "Device WiFi Linked Icon", 
                         tint = PillPalSuccess, 
                         modifier = Modifier.size(18.dp)
                     )
                 }
                 Column {
                     Text(
-                        text = "Bluetooth connecté avec succès",
+                        text = "Connecté au réseau de l'appareil",
                         color = PillPalTextPrimary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp
                     )
                     Text(
-                        text = "Appareil matériel : PillPal-SN8824",
+                        text = "Appareil matériel : $selectedDeviceWifi",
                         color = PillPalTextSecondary,
                         fontSize = 11.sp
                     )
@@ -1723,7 +1833,11 @@ fun ConnectWifiScreen(viewModel: PillPalViewModel) {
                 Spacer(modifier = Modifier.height(28.dp))
 
                 Button(
-                    onClick = { viewModel.sendWifiCredentials() },
+                    onClick = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                        viewModel.sendWifiCredentialsLocal(selectedSSID, password)
+                    },
                     enabled = selectedSSID.isNotBlank() && !isSending,
                     colors = ButtonDefaults.buttonColors(containerColor = PillPalPrimaryDark),
                     modifier = Modifier
@@ -3137,6 +3251,9 @@ fun ControlsView(viewModel: PillPalViewModel) {
     val patientAge by viewModel.patientAge.collectAsState()
     val patientDob by viewModel.patientDob.collectAsState()
 
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var activeDispenseProgressMessage by remember { mutableStateOf<String?>(null) }
     var showProfileEditDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -3147,10 +3264,16 @@ fun ControlsView(viewModel: PillPalViewModel) {
         var editDob by remember { mutableStateOf(patientDob) }
 
         AlertDialog(
-            onDismissRequest = { showProfileEditDialog = false },
+            onDismissRequest = {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+                showProfileEditDialog = false
+            },
             confirmButton = {
                 Button(
                     onClick = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
                         viewModel.updatePatientInfo(editName, editAge, editDob)
                         showProfileEditDialog = false
                     },
@@ -3160,7 +3283,11 @@ fun ControlsView(viewModel: PillPalViewModel) {
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showProfileEditDialog = false }) {
+                TextButton(onClick = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                    showProfileEditDialog = false
+                }) {
                     Text("Annuler", color = PillPalTextSecondary)
                 }
             },
