@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmez votre inscription</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#eef4f1; font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef4f1; padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px; background-color:#ffffff; border-radius:20px; overflow:hidden; border:1px solid #e0e9e4;">
+
+            <!-- Header -->
+            <tr>
+              <td style="background-color:#0f5c4c; padding:32px 40px; text-align:center;">
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                  <tr>
+                    <td style="width:44px; height:44px; background-color:#ffffff; border-radius:12px; text-align:center; vertical-align:middle;">
+                      <span style="font-size:22px; line-height:44px;">&#128138;</span>
+                    </td>
+                    <td style="padding-left:12px; text-align:left; vertical-align:middle;">
+                      <div style="color:#ffffff; font-size:22px; font-weight:700; letter-spacing:0.2px;">PillPal</div>
+                      <div style="color:#bcdcd0; font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;">Health Tech</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:40px 40px 24px 40px;">
+                <h1 style="margin:0 0 12px 0; color:#14251f; font-size:22px; font-weight:800; text-align:center;">
+                  Confirmez votre adresse email
+                </h1>
+                <p style="margin:0 0 28px 0; color:#5b6b64; font-size:15px; line-height:22px; text-align:center;">
+                  Bienvenue sur PillPal. Saisissez le code ci-dessous dans l'application pour activer votre compte aidant.
+                </p>
+
+                <!-- OTP code box -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" style="background-color:#e9f5ef; border:1.5px solid #bcdcd0; border-radius:16px; padding:24px 16px;">
+                      <div style="color:#0f5c4c; font-size:38px; font-weight:800; letter-spacing:10px; font-family:'Courier New', Courier, monospace;">
+                        {{ .Token }}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:24px 0 0 0; color:#8a988f; font-size:13px; line-height:20px; text-align:center;">
+                  Ce code expire dans 60 minutes.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Divider -->
+            <tr>
+              <td style="padding:0 40px;">
+                <div style="border-top:1px solid #edf2ef;"></div>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding:24px 40px 32px 40px;">
+                <p style="margin:0; color:#9aa6a0; font-size:12px; line-height:18px; text-align:center;">
+                  Si vous n'avez pas demandé cette inscription, ignorez simplement cet email — aucun compte ne sera créé.
+                </p>
+                <p style="margin:16px 0 0 0; color:#c1c9c5; font-size:11px; text-align:center;">
+                  &copy; PillPal Health Tech
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

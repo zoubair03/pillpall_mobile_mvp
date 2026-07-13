@@ -17,20 +17,10 @@ create type caregiver_role as enum ('owner', 'viewer');
 -- A patient is the person taking medication. Not tied 1:1 to a
 -- login — a patient may have zero, one, or several caregivers.
 create table patients (
-  id                 uuid primary key default gen_random_uuid(),
-  full_name          text not null,
-  timezone           text not null default 'Africa/Tunis',
-  -- Independently nullable, not derived from one another: a caregiver
-  -- may know an elderly patient's approximate age without their exact
-  -- birth date, or vice versa.
-  age                int,
-  date_of_birth      date,
-  conditions         text,
-  -- Set once the post-pairing "Patient Profile" onboarding screen
-  -- succeeds — lets the app resume onboarding at the right screen
-  -- instead of guessing from field contents.
-  profile_completed  boolean not null default false,
-  created_at         timestamptz not null default now()
+  id          uuid primary key default gen_random_uuid(),
+  full_name   text not null,
+  timezone    text not null default 'Africa/Tunis',
+  created_at  timestamptz not null default now()
 );
 
 -- Many-to-many: which caregivers (auth.users) can see which patients.
@@ -48,16 +38,13 @@ create table caregiver_patients (
 -- pairing_code is shown on the OLED during setup so the caregiver
 -- can claim the device from the app without typing the device_uid.
 create table devices (
-  id                     uuid primary key default gen_random_uuid(),
-  device_uid             text not null unique,
-  patient_id             uuid references patients(id) on delete set null,
-  pairing_code           text unique,
-  claimed_at             timestamptz,
-  firmware_version       text,
-  -- Set once the post-pairing "Schedule Setup" onboarding screen
-  -- succeeds — gates entry to the main hub.
-  onboarding_completed   boolean not null default false,
-  created_at             timestamptz not null default now()
+  id                uuid primary key default gen_random_uuid(),
+  device_uid        text not null unique,
+  patient_id        uuid references patients(id) on delete set null,
+  pairing_code      text unique,
+  claimed_at        timestamptz,
+  firmware_version  text,
+  created_at        timestamptz not null default now()
 );
 
 -- Dose schedule, 3 rows per device (morning/midday/night).
@@ -181,33 +168,10 @@ create policy "read linked devices"
     )
   );
 
--- Note: there is deliberately no general client-side UPDATE policy for
--- claiming a device (setting patient_id / claimed_at / pairing_code).
--- That write only happens inside create_patient_and_claim() below, which
+-- Note: there is deliberately no client-side UPDATE policy for
+-- claiming a device (setting patient_id / claimed_at). That write
+-- only happens inside create_patient_and_claim() below, which
 -- validates the pairing code server-side before touching the row.
---
--- onboarding_completed is the one exception: the Schedule Setup
--- onboarding screen needs to flip it once, and it's not security-
--- sensitive (unlike patient_id/claimed_at), so it gets a column-scoped
--- grant rather than a full-row UPDATE policy — every other column on
--- devices stays unreachable from the client even though the row-level
--- policy below would otherwise allow it.
-grant update (onboarding_completed) on devices to authenticated;
-
-create policy "update onboarding_completed for linked devices"
-  on devices for update
-  using (
-    patient_id in (
-      select patient_id from caregiver_patients
-      where caregiver_id = auth.uid() and role = 'owner'
-    )
-  )
-  with check (
-    patient_id in (
-      select patient_id from caregiver_patients
-      where caregiver_id = auth.uid() and role = 'owner'
-    )
-  );
 
 -- ── schedules: read/update if caregiver owns the parent device ──
 create policy "read schedules for linked devices"
@@ -320,15 +284,6 @@ begin
   update devices
   set patient_id = v_patient_id, claimed_at = now()
   where id = v_device_id;
-
-  -- Default schedule so the post-pairing "Schedule Setup" onboarding
-  -- screen has real rows to UPDATE (schedules has no client-side insert
-  -- policy — see below).
-  insert into schedules (device_id, dose, time_of_day)
-  values
-    (v_device_id, 'morning', '08:00:00'),
-    (v_device_id, 'midday',  '13:00:00'),
-    (v_device_id, 'night',   '20:00:00');
 
   return query select v_patient_id, v_device_id;
 end;
