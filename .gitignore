@@ -16,3 +16,7 @@
 local.properties
 .env
 debug.keystore
+node_modules/
+app/google-services.json
+.claude/
+/supabase/
