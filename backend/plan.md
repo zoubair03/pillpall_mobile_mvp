@@ -106,7 +106,48 @@ Pre-provision `device_uid` + `pairing_code` + MQTT credentials per physical
 unit before flashing. Lowest priority — only matters once real units are
 being built, and depends on step 5 (credentials come from EMQX).
 
-## Deployed to production — 2026-07-11
+## Moved to new project — 2026-09-30
+
+Production is now project `bnubxkkwflrteponobwl` (`pillpal_app`, org
+`pillpall`, eu-west-1). The old `riphkcjgnwfsfrluwnlo` project described
+below is superseded — anything still pointing at it (EMQX rule URL, etc.)
+must move to `https://bnubxkkwflrteponobwl.supabase.co`.
+
+Fresh project, so all 9 migrations applied cleanly via `db push` (no
+repair needed). All three functions deployed. The app's `.env` points here.
+
+- The cron migration no longer hardcodes the project URL — it reads Vault
+  secret `project_url`, alongside `service_role_key`. Both are set.
+- Vault's `service_role_key` must be the **`sb_secret_...` key**, not the
+  legacy JWT: `check-missed-doses` compares the header against its injected
+  `SUPABASE_SERVICE_ROLE_KEY`, which on this project is the new-format key.
+  With the legacy JWT the gateway passes but the function returns 401.
+  Verified: manual run of the cron's HTTP call → 200 `{"checked":0,"missed":0}`.
+- All 7 function secrets set from `supabase/.env.local` (gitignored):
+  EMQX deployment `dc2304f4` (eu-central-1, owner's own account), Firebase
+  project `pillpal-app-7548d`. Verified: EMQX publish API accepts the
+  credentials; `emqx-webhook` rejects a bad secret (401) and upserts
+  `device_status` for a real status payload (test device cleaned up).
+- EMQX rule engine → `emqx-webhook` is configured and verified end to end
+  (publish via EMQX API → rule → webhook → `device_status` + `dose_events`
+  rows; test data cleaned up). Rule SQL:
+  ```sql
+  SELECT
+    regex_replace(topic, '^[$]tenants/[^/]+/', '') as topic,
+    json_decode(payload) as payload
+  FROM
+    "pillpal/+/status", "pillpal/+/event/dose"
+  ```
+  The `regex_replace` matters: EMQX Serverless is multi-tenant and the rule
+  engine sees topics as `$tenants/<deployment>/pillpal/...` (devices never
+  see this prefix). Without stripping it, `emqx-webhook` logs "unrecognized
+  topic shape" and drops the message while still returning 200 — so EMQX
+  reports success even though nothing is written. HTTP action: POST, TLS on,
+  headers `Content-Type: application/json` + `X-Webhook-Secret`, empty body.
+- Firebase Android app re-registered as `com.example` (first attempt was a
+  `com.exampl` typo); `app/google-services.json` updated, debug build passes.
+
+## Deployed to production — 2026-07-11 (old project, superseded)
 
 Project `riphkcjgnwfsfrluwnlo` (Supabase Cloud, eu-central-1). All three
 migrations applied, all three functions deployed, all secrets set
