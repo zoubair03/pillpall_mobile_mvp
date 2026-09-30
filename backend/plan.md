@@ -144,6 +144,17 @@ repair needed). All three functions deployed. The app's `.env` points here.
   topic shape" and drops the message while still returning 200 — so EMQX
   reports success even though nothing is written. HTTP action: POST, TLS on,
   headers `Content-Type: application/json` + `X-Webhook-Secret`, empty body.
+- **Auth email — temporary state (2026-09-30):** email confirmation is
+  **OFF** (`mailer_autoconfirm = true`) so sign-up logs straight in while
+  developing. Reason: on the free tier with Supabase's built-in mailer,
+  the email template can't be changed (so the confirmation email carries a
+  link, not the `{{ .Token }}` code the app's OTP screen needs), it's capped
+  at 2 emails/hour, and it only delivers to org members. Email OTP length
+  is already set to 6 to match the app. **Before launch**: add custom SMTP
+  (Gmail app password for now, or Resend/Brevo with a verified domain),
+  upload `supabase/templates/confirmation.html` as the confirmation
+  template, raise the email rate limit, then set `mailer_autoconfirm`
+  back to false.
 - Firebase Android app re-registered as `com.example` (first attempt was a
   `com.exampl` typo); `app/google-services.json` updated, debug build passes.
 
